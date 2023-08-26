@@ -1,15 +1,11 @@
+import 'package:cpims_mobile/Models/case_load_model.dart';
 import 'package:cpims_mobile/constants.dart';
 import 'package:cpims_mobile/screens/forms/form1b/utils/form1bConstants.dart';
 import 'package:cpims_mobile/screens/forms/form1b/widgets/critical_event_form1b.dart';
 import 'package:cpims_mobile/screens/forms/form1b/widgets/healthy_form1b.dart';
 import 'package:cpims_mobile/screens/forms/form1b/widgets/safe_form1b.dart';
 import 'package:cpims_mobile/screens/forms/form1b/widgets/stable_form1b.dart';
-import 'package:cpims_mobile/screens/registry/organisation_units/widgets/about_organisation_registry.dart';
-import 'package:cpims_mobile/screens/registry/organisation_units/widgets/organisation_contact_registry.dart';
-import 'package:cpims_mobile/screens/registry/organisation_units/widgets/organisation_location_registry.dart';
-import 'package:cpims_mobile/screens/registry/organisation_units/widgets/organsation_type_registry.dart';
 import 'package:cpims_mobile/widgets/app_bar.dart';
-import 'package:cpims_mobile/widgets/custom_arrow_button.dart';
 import 'package:cpims_mobile/widgets/custom_button.dart';
 import 'package:cpims_mobile/widgets/custom_stepper.dart';
 import 'package:cpims_mobile/widgets/drawer.dart';
@@ -18,10 +14,10 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 import '../../../providers/form1b_provider.dart';
-import '../../../widgets/custom_toast.dart';
 
 class Form1BScreen extends StatefulWidget {
-  const Form1BScreen({super.key});
+  const Form1BScreen({super.key, required this.caseLoad});
+  final CaseLoadModel caseLoad;
 
   @override
   State<Form1BScreen> createState() =>
@@ -37,9 +33,24 @@ class _Form1BScreen extends State<Form1BScreen> {
     const StableForm1b(),
     const CriticalEventForm1b(),
   ];
+
+
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    Future.delayed(Duration.zero,(){
+      Form1bProvider form1bProvider = Provider.of<Form1bProvider>(context,listen: false);
+      form1bProvider.setFinalFormDataOvcId(widget.caseLoad.cpimsId!);
+    });
+
+  }
+
   @override
   Widget build(BuildContext context) {
-    Form1bProvider form1bProvider = Provider.of<Form1bProvider>(context);
+    Form1bProvider form1bProvider = Provider.of<Form1bProvider>(context,listen: false);
+
 
     return Scaffold(
       appBar: customAppBar(),

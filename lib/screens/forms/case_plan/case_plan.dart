@@ -3,7 +3,6 @@ import 'package:cpims_mobile/providers/case_plan_provider.dart';
 import 'package:cpims_mobile/widgets/app_bar.dart';
 import 'package:cpims_mobile/widgets/custom_button.dart';
 import 'package:cpims_mobile/widgets/custom_date_picker.dart';
-import 'package:cpims_mobile/widgets/custom_dropdown_multiselect.dart';
 import 'package:cpims_mobile/widgets/custom_text_field.dart';
 import 'package:cpims_mobile/widgets/drawer.dart';
 import 'package:cpims_mobile/widgets/footer.dart';
@@ -409,8 +408,6 @@ class _CasePlanTemplateScreenState extends State<CasePlanTemplateScreen> {
                           child: CustomButton(
                             text: "Submit",
                             onTap: () {
-                              // form1bProvider.setSelectedServices(['Service 1', 'Service 2']);
-                              // form1bProvider.setSelectedDate(DateTime.now());
                               casePlanProvider.saveCasaPlanDataLocally();
                             },
                           ),
