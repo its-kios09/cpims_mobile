@@ -36,8 +36,6 @@ class Form1ADataModel extends Form1DataBaseModel {
       services: services,
       criticalEvents: criticalEvents,
     );
-
-
   }
 
   @override
