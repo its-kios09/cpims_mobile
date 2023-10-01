@@ -8,6 +8,7 @@ import 'package:cpims_mobile/screens/forms/form1b/widgets/stable_form1b.dart';
 import 'package:cpims_mobile/widgets/app_bar.dart';
 import 'package:cpims_mobile/widgets/custom_button.dart';
 import 'package:cpims_mobile/widgets/custom_stepper.dart';
+import 'package:cpims_mobile/widgets/custom_toast.dart';
 import 'package:cpims_mobile/widgets/drawer.dart';
 import 'package:cpims_mobile/widgets/footer.dart';
 import 'package:flutter/material.dart';
@@ -38,7 +39,6 @@ class _Form1BScreen extends State<Form1BScreen> {
 
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
     Future.delayed(Duration.zero,(){
       Form1bProvider form1bProvider = Provider.of<Form1bProvider>(context,listen: false);
@@ -133,17 +133,18 @@ class _Form1BScreen extends State<Form1BScreen> {
                               width: 50,
                             ),
                             Expanded(
-                              child: CustomButton(
-                                text: selectedStep == steps.length - 1
-                                    ? 'Submit'
-                                    : 'Next',
-                                onTap: () {
-                                  setState(() {
-                                    if (selectedStep < steps.length - 1) {
-                                      selectedStep++;
-                                    }
-                                  });
-                                },
+                              child: Visibility(
+                                visible: selectedStep < steps.length - 1, // Hide the button when selectedStep is equal to steps.length - 1
+                                child: CustomButton(
+                                  text: 'Next',
+                                  onTap: () {
+                                    setState(() {
+                                      if (selectedStep < steps.length - 1) {
+                                        selectedStep++;
+                                      }
+                                    });
+                                  },
+                                ),
                               ),
                             )
                           ],
@@ -156,15 +157,39 @@ class _Form1BScreen extends State<Form1BScreen> {
                             Expanded(
                               child: CustomButton(
                                 text: "Submit",
-                                onTap: () {
+                                onTap: () async{
                                   // form1bProvider.setSelectedServices(['Service 1', 'Service 2']);
                                   // form1bProvider.setSelectedDate(DateTime.now());
-                                  form1bProvider.saveForm1bData(form1bProvider.formData);
+                                  bool isFormSaved = await form1bProvider.saveForm1bData(form1bProvider.formData);
+                                  if(isFormSaved == true){
+                                    CustomToastWidget.showToast("Form saved successfully");
+                                    setState(() {
+                                      selectedStep = 0;
+                                      });
+
+                                  }
                                 },
                               ),
                             )
                           ]
-                        )
+                        ),
+                        const SizedBox(
+                          height: 15,
+                        ),
+                        Row(
+                            children: [
+                              Expanded(
+                                child: CustomButton(
+                                    text: 'Cancel',
+                                    color: kTextGrey,
+                                    onTap: () {
+                                      Navigator.of(context).pop();
+                                    }
+                                ),
+
+                              )
+                            ]
+                        ),
                       ],
                     ),
                   ),
