@@ -17,6 +17,8 @@ import 'package:provider/provider.dart';
 
 import '../../../Models/form_1_model.dart';
 import '../../../providers/form1b_provider.dart';
+import '../../../widgets/custom_card_grid_item.dart';
+import '../../../widgets/custom_grid_view.dart';
 
 class Form1BScreen extends StatefulWidget {
   const Form1BScreen({super.key, required this.caseLoad});
@@ -196,6 +198,11 @@ class _Form1BScreen extends State<Form1BScreen> {
                             ]
                         ),
                         const SizedBox(height: 20),
+                        const Text('Past Assesments',
+                            style: TextStyle(
+                                fontSize: 18,
+                                fontWeight: FontWeight.bold,
+                                color: Colors.black)),
                         const SizedBox(
                             width: 300, // Adjust the width value as needed
                             child: HistoryAssessmentListWidget()
@@ -229,7 +236,7 @@ class HistoryAssessmentListWidget extends StatelessWidget {
         physics: const NeverScrollableScrollPhysics(),
         itemCount: savedData.length,
         itemBuilder: (context, index) {
-          print("form1b fetched data:==========>${savedData[0].ovcCpimsId}");
+          print("form1b fetched data:==========>${savedData[0].services[0]}");
           // return const AssessmentItemWidget();
           if (savedData.isEmpty) {
             // Handle the case where savedData is empty
@@ -251,29 +258,68 @@ class AssessmentItemWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Row(
-      children: [
-        Expanded(
-          child: Text(
-            formData!.ovcCpimsId, // Replace with the actual property you want to display
-            style: TextStyle(fontSize: 12, fontWeight: FontWeight.bold),
-          ),
-        ),
-        SizedBox(
-          height: 50,
-        ),
-        Expanded(
-          child: Text(
-            formData!.ovcCpimsId, // Replace with the date property
-            style: TextStyle(fontSize: 12, fontWeight: FontWeight.bold),
-          ),
-        ),
-        SizedBox(width: 10),
-        Icon(
-          CupertinoIcons.delete,
-          color: Colors.red,
-        )
-      ],
+    return Card(
+        child: Column(
+          // children: [
+            // Row(
+            children: [
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  const Text(
+                    'Name: ',
+                    style: TextStyle(fontSize: 12),
+                  ),
+                  Text(
+                    formData!.ovcCpimsId,
+                    style: const TextStyle(fontSize: 12),
+                  ),
+                ],
+              ),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      const Text(
+                        'CPIMS ID: ',
+                        style: TextStyle(fontSize: 12),
+                      ),
+                      Text(
+                        formData!.ovcCpimsId,
+                        style: const TextStyle(fontSize: 12),
+                      ),
+                    ],
+              ),
+              const SizedBox(
+                height: 4,
+              ),
+              Row(
+                children: [
+                  const Text(
+                    'Service: ',
+                    style: TextStyle(fontSize: 12),
+                  ),
+                  Text(
+                    formData!.services.isNotEmpty
+                        ? formData!.services[0].serviceId ?? 'N/A'
+                        : 'N/A', // Replace with the date property
+                    style: TextStyle(fontSize: 12, fontWeight: FontWeight.bold),
+                  ),
+                ]
+
+              ),
+              SizedBox(width: 10),
+              GestureDetector(
+                onTap: () {
+                  CustomToastWidget.showToast("delete btn clicked");
+                },
+                child: const Icon(
+                  CupertinoIcons.delete,
+                  color: Colors.red,
+                ),
+              ),
+    ]
+
+    )
     );
   }
 }
