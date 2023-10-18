@@ -12,6 +12,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:multi_dropdown/multiselect_dropdown.dart';
 import 'package:provider/provider.dart';
 
+import '../../../Models/form_1_model.dart';
 import '../../../widgets/custom_toast.dart';
 
 class CasePlanTemplateScreen extends StatefulWidget {
@@ -421,7 +422,10 @@ class _CasePlanTemplateScreenState extends State<CasePlanTemplateScreen> {
                                   text: 'Cancel',
                                   color: kTextGrey,
                                   onTap: () {
-                                    Navigator.of(context).pop();
+                                    // Navigator.of(context).pop();
+                                    List<Map<String, dynamic>?> savedData = casePlanProvider.localCasePlanList;
+                                    final dataAsString = savedData.map((data) => data.toString()).join(", ");
+                                    CustomToastWidget.showToast(dataAsString);
                                   }
                                 ),
 
@@ -449,46 +453,99 @@ class _CasePlanTemplateScreenState extends State<CasePlanTemplateScreen> {
 class HistoryAssessmentListWidget extends StatelessWidget {
   const HistoryAssessmentListWidget({super.key});
 
+
+
   @override
   Widget build(BuildContext context) {
+    final casePlanProvider = Provider.of<CasePlanProvider>(context);
+    casePlanProvider.fetchCasePlanRecordLocal();
+    List<Map<String, dynamic>?> savedData = casePlanProvider.localCasePlanList;
+
     return ListView.builder(
         shrinkWrap: true,
         physics: const NeverScrollableScrollPhysics(),
-        itemCount: 4,
+        itemCount: savedData.length,
         itemBuilder: (context, index) {
-          return const AssessmentItemWidget();
+          if (savedData.isEmpty) {
+            // Handle the case where savedData is empty
+            return Text('No Form1B Data available');
+          }
+
+          final formData = savedData[index];
+          return AssessmentItemWidget(formData: formData);
         });
   }
 }
 
+
 class AssessmentItemWidget extends StatelessWidget {
-  const AssessmentItemWidget({super.key});
+  final Map<String, dynamic>? formData;
+
+  const AssessmentItemWidget({Key? key, this.formData});
 
   @override
   Widget build(BuildContext context) {
-    return const Row(
-      children: [
-        Expanded(
-          child: Text(
-            'Child not Adhering to ARVs',
-            style: TextStyle(fontSize: 12, fontWeight: FontWeight.bold),
-          ),
-        ),
-        SizedBox(
-          height: 50,
-        ),
-        Expanded(
-          child: Text(
-            '28-Aug-2023',
-            style: TextStyle(fontSize: 12, fontWeight: FontWeight.bold),
-          ),
-        ),
-        SizedBox(width: 10),
-        Icon(
-          CupertinoIcons.delete,
-          color: Colors.red,
+    return Card(
+        child: Column(
+          // children: [
+          // Row(
+            children: [
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  const Text(
+                    'Name: ',
+                    style: TextStyle(fontSize: 12),
+                  ),
+                  Text(
+                    "formData!.ovcCpimsId",
+                    style: const TextStyle(fontSize: 12),
+                  ),
+                ],
+              ),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  const Text(
+                    'CPIMS ID: ',
+                    style: TextStyle(fontSize: 12),
+                  ),
+                  Text(
+                    "formData!.ovcCpimsId",
+                    style: const TextStyle(fontSize: 12),
+                  ),
+                ],
+              ),
+              const SizedBox(
+                height: 4,
+              ),
+              Row(
+                  children: [
+                    const Text(
+                      'Service: ',
+                      style: TextStyle(fontSize: 12),
+                    ),
+                    Text(
+                      "formData!.services.isNotEmpty",
+                      // Replace with the date property
+                      style: TextStyle(fontSize: 12, fontWeight: FontWeight.bold),
+                    ),
+                  ]
+
+              ),
+              SizedBox(width: 10),
+              GestureDetector(
+                onTap: () {
+                  CustomToastWidget.showToast("delete btn clicked");
+                },
+                child: const Icon(
+                  CupertinoIcons.delete,
+                  color: Colors.red,
+                ),
+              ),
+            ]
+
         )
-      ],
     );
   }
 }

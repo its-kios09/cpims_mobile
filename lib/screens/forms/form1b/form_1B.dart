@@ -317,7 +317,7 @@ class AssessmentItemWidget extends StatelessWidget {
                   color: Colors.red,
                 ),
               ),
-    ]
+            ]
 
     )
     );

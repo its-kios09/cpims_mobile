@@ -63,6 +63,10 @@ class CasePlanProvider extends ChangeNotifier {
     notifyListeners();
   }
 
+  CasePlanProvider() {
+    fetchCasePlanRecordLocal();
+  }
+
   void setSelectedServicesList(List<ValueItem> services) {
     _casePlanModelData.selectedServices.addAll(services);
     notifyListeners();
@@ -205,6 +209,18 @@ class CasePlanProvider extends ChangeNotifier {
     _casePlanModelData.selectedDate = DateTime.now();
 
     notifyListeners();
+  }
+
+
+  List<Map<String, dynamic>?> _localCasePlanList = [];
+  List<Map<String, dynamic>?> get localCasePlanList => _localCasePlanList;
+  Future<void> fetchCasePlanRecordLocal() async {
+    try {
+      _localCasePlanList = await CasePlanService.getCasePlanRecordLocal("1234");
+      notifyListeners();
+    } catch (e) {
+      print("Error fetching case plan record: $e");
+    }
   }
 
 
