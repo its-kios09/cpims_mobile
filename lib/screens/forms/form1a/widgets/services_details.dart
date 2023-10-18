@@ -34,6 +34,8 @@ class _ServicesDetailsState extends State<ServicesDetails> {
 
   List<ValueItem> selectedDomain = [];
   List<ValueItem> selectedDomainOptions = [];
+  List<ValueItem> appendedDomainOptions = [];
+  List<ValueItem> appendedSubDomainOptions = [];
 
   // Subdomain
   // List<ValueItem> listOfSubDomains = optionSubDomains.map((subdomain) {
@@ -145,25 +147,66 @@ class _ServicesDetailsState extends State<ServicesDetails> {
               currentServiceSelectedDate = selectedEventDate;
               form1aProvider.setServiceSelectedDate(currentServiceSelectedDate);
             }),
-        const SizedBox(
-          height: 15,
+        const SizedBox(height: 15),
+        CustomButton(
+          text: 'Add',
+          color: kTextGrey,
+          onTap: () {
+            appendedDomainOptions.addAll(selectedDomainOptions);
+            appendedSubDomainOptions.addAll(selectedSubDomainOptions);
+            Get.snackbar(
+              'Success',
+              'successfully added service(s).',
+              duration: const Duration(seconds: 6),
+              snackPosition: SnackPosition.TOP, // Display at the top of the screen
+              backgroundColor: Colors.green,
+              colorText: Colors.white,
+              margin: const EdgeInsets.all(16),
+              borderRadius: 8,
+            );
+          },
         ),
-        // CustomButton(
-        //   text: 'Add',
-        //   color: kTextGrey,
-        //   onTap: () {
-        //     form1aProvider.submitServicesData();
-        //   },
-        // ),
-        // const SizedBox(
-        //   height: 5,
-        // ),
-        CustomButton(text: 'Form1A Past Assessment(s)',
-        onTap: (){
-          setState(() {
-            Get.to(() => HistoryForm1A(caseLoadModel: widget.caseLoadModel,));
-          });
-        },),
+        const SizedBox(height: 5),
+        CustomButton(
+          text: 'Form1A Past Assessment(s)',
+          onTap: () {
+            setState(() {
+              Get.to(() => HistoryForm1A(caseLoadModel: widget.caseLoadModel));
+            });
+          },
+        ),
+        const SizedBox(height: 20),
+
+        const Text(
+          'Selected Services:',
+          style: TextStyle(fontSize: 12, fontWeight: FontWeight.bold),
+        ),
+        const SizedBox(height: 10),
+        Wrap(
+          children: appendedDomainOptions.map((domain) {
+            return Chip(
+              label: Text(domain.label),
+              onDeleted: () {
+                setState(() {
+                  appendedDomainOptions.remove(domain);
+                });
+              },
+            );
+          }).toList(),
+        ),
+        const SizedBox(height: 10),
+        Wrap(
+          children: appendedSubDomainOptions.map((service) {
+            return Chip(
+              label: Text(service.label),
+              onDeleted: () {
+                setState(() {
+                  appendedSubDomainOptions.remove(service);
+                });
+              },
+            );
+          }).toList(),
+        ),
       ],
     );
   }

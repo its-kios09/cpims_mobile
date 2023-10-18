@@ -41,7 +41,6 @@ class Form1AProvider extends ChangeNotifier {
   ServiceFormData get serviceFormData => _serviceFormData;
 
   void setSelectedEvents(List<ValueItem> selectedEvents) {
-    _criticalFormData.selectedEvents.clear();
     _criticalFormData.selectedEvents.addAll(selectedEvents);
     notifyListeners();
   }
@@ -52,13 +51,11 @@ class Form1AProvider extends ChangeNotifier {
   }
 
   void setSelectedDomain(List<ValueItem> selectedDomain) {
-    _serviceFormData.selectedDomain.clear();
     _serviceFormData.selectedDomain.addAll(selectedDomain);
     notifyListeners();
   }
 
   void setSelectedSubDomain(List<ValueItem> selectedService) {
-    _serviceFormData.selectedService.clear();
     _serviceFormData.selectedService.addAll(selectedService);
     notifyListeners();
   }
