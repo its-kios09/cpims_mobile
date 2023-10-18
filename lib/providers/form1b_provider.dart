@@ -12,6 +12,13 @@ import '../screens/forms/form1b/utils/StableForm1bModel.dart';
 import '../widgets/custom_toast.dart';
 
 class Form1bProvider extends ChangeNotifier {
+
+  Form1bProvider() {
+    // Fetch data immediately when the provider is created
+    fetchLocalDbData();
+  }
+
+
   final HealthFormData _formData = HealthFormData(
       selectedServices: [],
       selectedDate: DateTime.now(),
@@ -99,6 +106,14 @@ class Form1bProvider extends ChangeNotifier {
     List<Form1CriticalEventsModel> criticalEvents = generateCriticalEventsDS(criticalEventDataForm1b);
     print(criticalEvents);
     return criticalEvents;
+  }
+
+
+  List<Form1DataModel> _form1bDBData = [];
+  List<Form1DataModel> get form1bDBData => _form1bDBData;
+  Future<void> fetchLocalDbData() async {
+    _form1bDBData = await Form1Service.getAllForms("form1b");
+    notifyListeners();
   }
 
 
