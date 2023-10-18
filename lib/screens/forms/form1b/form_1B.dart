@@ -15,6 +15,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
+import '../../../Models/form_1_model.dart';
 import '../../../providers/form1b_provider.dart';
 
 class Form1BScreen extends StatefulWidget {
@@ -185,7 +186,9 @@ class _Form1BScreen extends State<Form1BScreen> {
                                     color: kTextGrey,
                                     onTap: () {
                                       // Navigator.of(context).pop();
-                                      form1bProvider.fetchSavedDataFromDb();
+                                      // form1bProvider.fetchSavedDataFromDb();
+                                      // form1bProvider.fetchSavedDataFromDb();
+                                      CustomToastWidget.showToast(form1bProvider.form1bDBData[1].ovcCpimsId);
                                     }
                                 ),
 
@@ -216,27 +219,43 @@ class HistoryAssessmentListWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final form1bProvider = Provider.of<Form1bProvider>(context);
+    form1bProvider.fetchLocalDbData();
+    List<Form1DataModel> savedData = form1bProvider.form1bDBData;
+
+
     return ListView.builder(
         shrinkWrap: true,
         physics: const NeverScrollableScrollPhysics(),
-        itemCount: 4,
+        itemCount: savedData.length,
         itemBuilder: (context, index) {
-          return const AssessmentItemWidget();
+          print("form1b fetched data:==========>${savedData[0].ovcCpimsId}");
+          // return const AssessmentItemWidget();
+          if (savedData.isEmpty) {
+            // Handle the case where savedData is empty
+            return Text('No Form1B Data available');
+          }
+
+          final formData = savedData[index];
+          return AssessmentItemWidget(formData: formData);
         });
   }
 }
 
 
+
 class AssessmentItemWidget extends StatelessWidget {
-  const AssessmentItemWidget({super.key});
+  final Form1DataModel? formData;
+
+  const AssessmentItemWidget({Key? key, this.formData});
 
   @override
   Widget build(BuildContext context) {
-    return const Row(
+    return Row(
       children: [
         Expanded(
           child: Text(
-            'Child not Adhering to ARVs',
+            formData!.ovcCpimsId, // Replace with the actual property you want to display
             style: TextStyle(fontSize: 12, fontWeight: FontWeight.bold),
           ),
         ),
@@ -245,7 +264,7 @@ class AssessmentItemWidget extends StatelessWidget {
         ),
         Expanded(
           child: Text(
-            '28-Aug-2023',
+            formData!.ovcCpimsId, // Replace with the date property
             style: TextStyle(fontSize: 12, fontWeight: FontWeight.bold),
           ),
         ),
@@ -258,3 +277,41 @@ class AssessmentItemWidget extends StatelessWidget {
     );
   }
 }
+
+
+
+
+
+
+
+// class AssessmentItemWidget extends StatelessWidget {
+//   const AssessmentItemWidget({super.key});
+//
+//   @override
+//   Widget build(BuildContext context) {
+//     return const Row(
+//       children: [
+//         Expanded(
+//           child: Text(
+//             'Child not Adhering to ARVs',
+//             style: TextStyle(fontSize: 12, fontWeight: FontWeight.bold),
+//           ),
+//         ),
+//         SizedBox(
+//           height: 50,
+//         ),
+//         Expanded(
+//           child: Text(
+//             '28-Aug-2023',
+//             style: TextStyle(fontSize: 12, fontWeight: FontWeight.bold),
+//           ),
+//         ),
+//         SizedBox(width: 10),
+//         Icon(
+//           CupertinoIcons.delete,
+//           color: Colors.red,
+//         )
+//       ],
+//     );
+//   }
+// }

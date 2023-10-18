@@ -16,6 +16,7 @@ class Form1bProvider extends ChangeNotifier {
   Form1bProvider() {
     // Fetch data immediately when the provider is created
     fetchLocalDbData();
+    // print("form1b fetched data:==========>$form1bFetchedData");
   }
 
 
@@ -221,18 +222,18 @@ class Form1bProvider extends ChangeNotifier {
   }
 
   List<Map<String, dynamic>> form1bFetchedData = [];
-  Future<void> fetchSavedDataFromDb() async {
-    try {
-      List<Map<String, dynamic>> updatedForm1Rows = await Form1Service.getAllForms("form1b");
-
-      form1bFetchedData = updatedForm1Rows;
-
-      print(form1bFetchedData);
-      notifyListeners();
-    } catch (e) {
-      print("Error fetching form1b data: $e");
-    }
-  }
+  // Future<void> fetchSavedDataFromDb() async {
+  //   try {
+  //     List<Map<String, dynamic>> updatedForm1Rows = await Form1Service.getAllForms("form1b");
+  //
+  //     form1bFetchedData = updatedForm1Rows;
+  //
+  //     print("fetched data from db$form1bFetchedData");
+  //     notifyListeners();
+  //   } catch (e) {
+  //     print("Error fetching form1b data: $e");
+  //   }
+  // }
 
 
   void resetFormData() {
