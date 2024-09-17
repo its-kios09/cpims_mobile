@@ -30,7 +30,7 @@ class StatisticsGridItem extends StatelessWidget {
                 ),
               ),
       child: Container(
-        height: 120,
+        height: 140,
         width: double.infinity,
         color: color,
         margin: const EdgeInsets.symmetric(vertical: 7.5),
@@ -47,7 +47,7 @@ class StatisticsGridItem extends StatelessWidget {
                       Text(
                         title,
                         style: const TextStyle(
-                            fontSize: 13,
+                            fontSize: 11,
                             color: Colors.white,
                             fontWeight: FontWeight.w600),
                       ),
@@ -57,7 +57,7 @@ class StatisticsGridItem extends StatelessWidget {
                       Text(
                         value,
                         style: const TextStyle(
-                          fontSize: 20,
+                          fontSize: 18,
                           color: Colors.white,
                         ),
                       ),

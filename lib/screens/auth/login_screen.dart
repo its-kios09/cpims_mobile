@@ -97,7 +97,6 @@ class _LoginScreenState extends State<LoginScreen> {
         errorSnackBar(context, 'Unable to get available biometrics');
       }
     }
-
     setState(() {});
   }
 
@@ -326,20 +325,21 @@ class _LoginScreenState extends State<LoginScreen> {
                 height: 15,
               ),
               Image.asset(
-                'assets/images/logo_public.jpg',
-                height: 80,
+                'assets/images/logo_private.png',
+                height: 60,
                 width: double.infinity,
                 fit: BoxFit.fitWidth,
+
               ),
               const SizedBox(
                 height: 15,
               ),
-              Center(
-                child: Image.asset(
-                  'assets/images/healthit.jpg',
-                  height: 60,
-                ),
-              ),
+              // Center(
+              //   child: Image.asset(
+              //     'assets/images/healthit.jpg',
+              //     height: 60,
+              //   ),
+              // ),
               const SizedBox(
                 height: 15,
               ),

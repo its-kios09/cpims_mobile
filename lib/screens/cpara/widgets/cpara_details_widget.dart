@@ -29,24 +29,6 @@ class _CparaDetailsWidgetState extends State<CparaDetailsWidget> {
   RadioButtonOptions? hasHivExposedInfant;
   RadioButtonOptions? hasPregnantOrBreastfeedingWoman;
 
-  // final List<ChildDetails> children = [
-  //   ChildDetails(
-  //     name: 'John Doe',
-  //     age: 10,
-  //     gender: 'Male',
-  //     uniqueNumber: '123456789',
-  //     schoolLevel: 'Primary',
-  //     registeredInProgram: true,
-  //   ),
-  //   ChildDetails(
-  //     name: 'Jane Doe',
-  //     age: 8,
-  //     gender: 'Female',
-  //     uniqueNumber: '987654321',
-  //     schoolLevel: 'Kindergarten',
-  //     registeredInProgram: false,
-  //   ),
-  // ];
 
   List<CaseLoadModel> children = [
   ];
@@ -113,8 +95,7 @@ class _CparaDetailsWidgetState extends State<CparaDetailsWidget> {
             print('Date selected: $date');
             DetailModel detailModel =
                 context.read<CparaProvider>().detailModel ?? DetailModel();
-            context.read<CparaProvider>().updateDetailModel(
-                detailModel.copyWith(dateOfAssessment: date.toString()));
+            context.read<CparaProvider>().updateDetailModel(detailModel.copyWith(dateOfAssessment: date.toString()));
           },
         ),
         const Divider(
@@ -307,6 +288,7 @@ class _TextViewsColumnState extends State<TextViewsColumn> {
     final SummaryDataModel dashData =
     context.select((UIProvider provider) => provider.getDashData);
 
+
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -318,19 +300,19 @@ class _TextViewsColumnState extends State<TextViewsColumn> {
         const SizedBox(height: 10),
         Text("${caseLoadModel.registrationDate}"),
         const SizedBox(height: 10),
-        const ReusableTitleText(title: "County"),
-        const SizedBox(height: 10),
-        Text("details.countyName *"),
-        const SizedBox(height: 10),
-        const ReusableTitleText(title: 'Sub County'),
-        const SizedBox(height: 10),
-        Text("details.subCountyName *"),
-        const SizedBox(height: 10),
-        const ReusableTitleText(
-            title: 'Name of caseworker/CHV conducting assessment'),
-        const SizedBox(height: 10),
-        Text("details.chvNames *"),
-        const SizedBox(height: 10),
+        // const ReusableTitleText(title: "County"),
+        // const SizedBox(height: 10),
+        // Text("details.countyName *"),
+        // const SizedBox(height: 10),
+        // const ReusableTitleText(title: 'Sub County'),
+        // const SizedBox(height: 10),
+        // Text("details.subCountyName *"),
+        // const SizedBox(height: 10),
+        // const ReusableTitleText(
+        //     title: 'Name of caseworker/CHV conducting assessment'),
+        // const SizedBox(height: 10),
+        // Text("details.chvNames *"),
+        // const SizedBox(height: 10),
         const ReusableTitleText(title: 'Name of SDP staff/Case Manager'),
         const SizedBox(height: 10),
         Text(dashData.orgUnit),
@@ -343,19 +325,19 @@ class _TextViewsColumnState extends State<TextViewsColumn> {
         const SizedBox(height: 10),
         Text("${caseLoadModel.caregiverCpimsId}"),
         const SizedBox(height: 10),
+        // const SizedBox(height: 10),
+        // const ReusableTitleText(title: 'Caregiver Gender'),
         const SizedBox(height: 10),
-        const ReusableTitleText(title: 'Caregiver Gender'),
-        const SizedBox(height: 10),
-        Text("Female *"),
-        const SizedBox(height: 10),
-        const ReusableTitleText(title: 'Caregiver DOB'),
-        const SizedBox(height: 10),
-        Text('August 21, 1973 *'),
-        const SizedBox(height: 10),
-        const ReusableTitleText(title: 'Caregiver Phone Number'),
-        const SizedBox(height: 10),
-        Text('708568702 *'),
-        const SizedBox(height: 10),
+        // Text("Female *"),
+        // const SizedBox(height: 10),
+        // const ReusableTitleText(title: 'Caregiver DOB'),
+        // const SizedBox(height: 10),
+        // Text('August 21, 1973 *'),
+        // const SizedBox(height: 10),
+        // const ReusableTitleText(title: 'Caregiver Phone Number'),
+        // const SizedBox(height: 10),
+        // Text('708568702 *'),
+        // const SizedBox(height: 10),
         const Divider(height: 20, thickness: 2),
         const SizedBox(height: 20),
       ],

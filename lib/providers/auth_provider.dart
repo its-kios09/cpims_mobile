@@ -52,7 +52,7 @@ class AuthProvider with ChangeNotifier {
 
     final http.Response response = await http.post(
       Uri.parse(
-        '${cpimsApiUrl}token/',
+        '${cpimsApiUrl}api/token/',
       ),
       body: {
         'username': username,
@@ -69,7 +69,7 @@ class AuthProvider with ChangeNotifier {
 
           await prefs.setString('access', responseData['access']);
           await prefs.setString('refresh', responseData['refresh']);
-          await prefs.setBool("hasUserSetup", true);
+          // await prefs.setBool("hasUserSetup", true);
 
           await prefs.setInt(
             'authTokenTimestamp',
@@ -129,9 +129,7 @@ class AuthProvider with ChangeNotifier {
   }) async {
     try {
       final prefs = await SharedPreferences.getInstance();
-
       String? refreshToken = prefs.getString('refresh');
-
       int? authTokenTimestamp = prefs.getInt('authTokenTimestamp');
 
       if (refreshToken != null && authTokenTimestamp != null) {
@@ -144,7 +142,7 @@ class AuthProvider with ChangeNotifier {
           // get new token
           final http.Response response = await http.post(
             Uri.parse(
-              '${cpimsApiUrl}token/refresh/',
+              '${cpimsApiUrl}api/token/refresh/',
             ),
             body: {
               'refresh': refreshToken,

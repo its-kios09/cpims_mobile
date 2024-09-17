@@ -8,21 +8,27 @@ import 'package:cpims_mobile/screens/forms/form1b/widgets/stable_form1b.dart';
 import 'package:cpims_mobile/widgets/app_bar.dart';
 import 'package:cpims_mobile/widgets/custom_button.dart';
 import 'package:cpims_mobile/widgets/custom_stepper.dart';
-import 'package:cpims_mobile/widgets/custom_toast.dart';
 import 'package:cpims_mobile/widgets/drawer.dart';
 import 'package:cpims_mobile/widgets/footer.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
+import 'package:get/get_core/src/get_main.dart';
 import 'package:provider/provider.dart';
 
 import '../../../providers/form1b_provider.dart';
+import '../../../widgets/custom_forms_date_picker.dart';
+import '../../../widgets/custom_toast.dart';
+import '../../homepage/provider/stats_provider.dart';
+import '../form1a/form1A_history.dart';
 
 class Form1BScreen extends StatefulWidget {
   const Form1BScreen({super.key, required this.caseLoad});
+
   final CaseLoadModel caseLoad;
 
   @override
-  State<Form1BScreen> createState() =>
-      _Form1BScreen();
+  State<Form1BScreen> createState() => _Form1BScreen();
 }
 
 class _Form1BScreen extends State<Form1BScreen> {
@@ -35,22 +41,22 @@ class _Form1BScreen extends State<Form1BScreen> {
     const CriticalEventForm1b(),
   ];
 
-
-
   @override
   void initState() {
+    // TODO: implement initState
     super.initState();
-    Future.delayed(Duration.zero,(){
-      Form1bProvider form1bProvider = Provider.of<Form1bProvider>(context,listen: false);
+    Future.delayed(Duration.zero, () {
+      Form1bProvider form1bProvider =
+          Provider.of<Form1bProvider>(context, listen: false);
       form1bProvider.setFinalFormDataOvcId(widget.caseLoad.cpimsId!);
     });
-
   }
 
   @override
   Widget build(BuildContext context) {
-    Form1bProvider form1bProvider = Provider.of<Form1bProvider>(context,listen: false);
-
+    bool isLastStep = selectedStep == steps.length - 1;
+    Form1bProvider form1bProvider =
+        Provider.of<Form1bProvider>(context, listen: false);
 
     return Scaffold(
       appBar: customAppBar(),
@@ -86,9 +92,9 @@ class _Form1BScreen extends State<Form1BScreen> {
                     padding: const EdgeInsets.all(10),
                     width: double.infinity,
                     color: Colors.black,
-                    child: const Text(
-                      'Form 1B Details',
-                      style: TextStyle(color: Colors.white),
+                    child: Text(
+                      ' FORM 1B DETAILS \n CARE GIVER: ${widget.caseLoad.caregiverNames} \n CPIMS ID: ${widget.caseLoad.cpimsId}',
+                      style: const TextStyle(color: Colors.white),
                     ),
                   ),
                   Padding(
@@ -111,6 +117,31 @@ class _Form1BScreen extends State<Form1BScreen> {
                         const SizedBox(
                           height: 30,
                         ),
+                        Visibility(
+                          visible: isLastStep,
+                          child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                const Text(
+                                  'Date of Event',
+                                  style: TextStyle(
+                                      fontSize: 12,
+                                      fontWeight: FontWeight.bold),
+                                ),
+                                const SizedBox(height: 10),
+                                CustomFormsDatePicker(
+                                    hintText: 'Select the date',
+                                    selectedDateTime:
+                                        form1bProvider.formData.selectedDate,
+                                    onDateSelected: (selectedDate) {
+                                      form1bProvider
+                                          .setSelectedDate(selectedDate);
+                                    }),
+                                const SizedBox(
+                                  height: 15,
+                                ),
+                              ]),
+                        ),
                         Row(
                           children: [
                             Expanded(
@@ -119,76 +150,134 @@ class _Form1BScreen extends State<Form1BScreen> {
                                 onTap: () {
                                   if (selectedStep == 0) {
                                     Navigator.pop(context);
+                                    form1bProvider.resetFormData();
+                                  } else {
+                                    setState(() {
+                                      if (selectedStep > 0) {
+                                        selectedStep--;
+                                      }
+                                    });
                                   }
-                                  setState(() {
-                                    if (selectedStep > 0) {
-                                      selectedStep--;
-                                    }
-                                  });
                                 },
                                 color: kTextGrey,
                               ),
                             ),
                             const SizedBox(
-                              width: 50,
+                              width: 20,
                             ),
                             Expanded(
-                              child: Visibility(
-                                visible: selectedStep < steps.length - 1, // Hide the button when selectedStep is equal to steps.length - 1
-                                child: CustomButton(
-                                  text: 'Next',
-                                  onTap: () {
+                              child: CustomButton(
+                                text: selectedStep == steps.length - 1
+                                    ? 'Submit Form1B'
+                                    : 'Next',
+                                onTap: () async {
+                                  if (selectedStep == steps.length - 1) {
+                                    if (form1bProvider.formData.selectedDate ==
+                                        null) {
+                                      CustomToastWidget.showToast(
+                                          "Please select date of event");
+                                      return;
+                                    } else {
+                                      bool isFormSaved =
+                                          await form1bProvider.saveForm1bData(
+                                        form1bProvider.formData,
+                                      );
+                                      context
+                                          .read<StatsProvider>()
+                                          .updateCparaFormStats();
+                                      setState(() {
+                                        if (isFormSaved == true) {
+                                          if (context.mounted) {
+                                            context
+                                                .read<StatsProvider>()
+                                                .updateFormOneBStats();
+                                          }
+                                          Get.snackbar(
+                                            'Success',
+                                            'Form1B data saved successfully.',
+                                            duration:
+                                                const Duration(seconds: 2),
+                                            snackPosition: SnackPosition.TOP,
+                                            // Display at the top of the screen
+                                            backgroundColor: Colors.green,
+                                            colorText: Colors.white,
+                                            margin: const EdgeInsets.all(16),
+                                            borderRadius: 8,
+                                          );
+                                          Navigator.pop(context);
+                                          selectedStep = 0;
+                                        }
+                                      });
+                                    }
+                                  } else {
                                     setState(() {
                                       if (selectedStep < steps.length - 1) {
                                         selectedStep++;
                                       }
                                     });
-                                  },
-                                ),
+                                  }
+                                },
                               ),
-                            )
+                            ),
                           ],
                         ),
                         const SizedBox(
                           height: 30,
                         ),
-                        Row(
-                          children: [
-                            Expanded(
-                              child: CustomButton(
-                                text: "Submit",
-                                onTap: () async{
-                                  // form1bProvider.setSelectedServices(['Service 1', 'Service 2']);
-                                  // form1bProvider.setSelectedDate(DateTime.now());
-                                  bool isFormSaved = await form1bProvider.saveForm1bData(form1bProvider.formData);
-                                  if(isFormSaved == true){
-                                    CustomToastWidget.showToast("Form saved successfully");
-                                    setState(() {
-                                      selectedStep = 0;
-                                      });
-
-                                  }
-                                },
-                              ),
-                            )
-                          ]
-                        ),
-                        const SizedBox(
-                          height: 15,
-                        ),
-                        Row(
+                        // Row(children: [
+                        //   Expanded(
+                        //     child: CustomButton(
+                        //       text: "Submit",
+                        //       onTap: () async {
+                        //         bool isFormSaved = await form1bProvider
+                        //             .saveForm1bData(form1bProvider.formData);
+                        //         if (isFormSaved == true) {
+                        //           CustomToastWidget.showToast(
+                        //               "Form saved successfully");
+                        //           setState(() {
+                        //             selectedStep = 0;
+                        //           });
+                        //         }
+                        //       },
+                        //     ),
+                        //   )
+                        // ]),
+                        // const SizedBox(
+                        //   height: 15,
+                        // ),
+                        // Row(children: [
+                        //   Expanded(
+                        //     child: CustomButton(
+                        //         text: 'Cancel',
+                        //         color: kTextGrey,
+                        //         onTap: () {
+                        //           // Navigator.of(context).pop();
+                        //           form1bProvider.fetchSavedDataFromDb();
+                        //         }),
+                        //   )
+                        // ]),
+                        const SizedBox(height: 20),
+                        GestureDetector(
+                          onTap: () {
+                            // TODO Handle past assessments
+                            // Get.to(() => HistoryForm1A(
+                            //     caseLoadModel: widget.caseLoadModel));
+                          },
+                          child: const Row(
                             children: [
-                              Expanded(
-                                child: CustomButton(
-                                    text: 'Cancel',
-                                    color: kTextGrey,
-                                    onTap: () {
-                                      Navigator.of(context).pop();
-                                    }
-                                ),
-
+                              Text(
+                                'Past Assessments',
+                                style: TextStyle(color: Colors.blue),
+                              ),
+                              SizedBox(
+                                width: 10,
+                              ),
+                              Icon(
+                                Icons.arrow_forward_ios_rounded,
+                                size: 15,
                               )
-                            ]
+                            ],
+                          ),
                         ),
                       ],
                     ),
@@ -198,6 +287,53 @@ class _Form1BScreen extends State<Form1BScreen> {
           const Footer(),
         ],
       ),
+    );
+  }
+}
+
+class HistoryAssessmentListWidget extends StatelessWidget {
+  const HistoryAssessmentListWidget({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return ListView.builder(
+        shrinkWrap: true,
+        physics: const NeverScrollableScrollPhysics(),
+        itemCount: 4,
+        itemBuilder: (context, index) {
+          return const AssessmentItemWidget();
+        });
+  }
+}
+
+class AssessmentItemWidget extends StatelessWidget {
+  const AssessmentItemWidget({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return const Row(
+      children: [
+        Expanded(
+          child: Text(
+            'Child not Adhering to ARVs',
+            style: TextStyle(fontSize: 12, fontWeight: FontWeight.bold),
+          ),
+        ),
+        SizedBox(
+          height: 50,
+        ),
+        Expanded(
+          child: Text(
+            '28-Aug-2023',
+            style: TextStyle(fontSize: 12, fontWeight: FontWeight.bold),
+          ),
+        ),
+        SizedBox(width: 10),
+        Icon(
+          CupertinoIcons.delete,
+          color: Colors.red,
+        )
+      ],
     );
   }
 }

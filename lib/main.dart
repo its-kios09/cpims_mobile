@@ -6,7 +6,10 @@ import 'package:cpims_mobile/screens/auth/login_screen.dart';
 import 'package:cpims_mobile/providers/auth_provider.dart';
 import 'package:cpims_mobile/providers/connection_provider.dart';
 import 'package:cpims_mobile/screens/cpara/provider/cpara_provider.dart';
+import 'package:cpims_mobile/screens/forms/case_plan/cpt/new_cpt_provider.dart';
+import 'package:cpims_mobile/screens/forms/form1a/new/utils/form_one_a_provider.dart';
 import 'package:cpims_mobile/screens/forms/form1b/form_1B.dart';
+import 'package:cpims_mobile/screens/homepage/provider/stats_provider.dart';
 import 'package:cpims_mobile/screens/initial_loader.dart';
 import 'package:cpims_mobile/screens/splash_screen.dart';
 import 'package:cpims_mobile/theme.dart';
@@ -33,6 +36,9 @@ void main() async {
         ChangeNotifierProvider(create: (_) => Form1AProvider()),
         ChangeNotifierProvider(create: (_) => Form1bProvider()),
         ChangeNotifierProvider(create: (_) => CasePlanProvider()),
+        ChangeNotifierProvider(create: (_) => CptProvider()),
+        ChangeNotifierProvider(create: (_) => StatsProvider()),
+        ChangeNotifierProvider(create: (_) => Form1AProviderNew()),
       ],
       child: const CPIMS(),
     ),

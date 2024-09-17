@@ -426,7 +426,7 @@ class _PastCPARAListWidgetState extends State<PastCPARAListWidget> {
             color: Colors.grey.shade200
         ),
         child: FutureBuilder<List<CPARADatabase>>(
-          future: database != null ? getUnsynchedForms(database!) : Future.value([]),
+          future: database != null ? getUnsyncedForms(database!) : Future.value([]),
           builder: (context, snapshot) {
 
             if (snapshot.connectionState == ConnectionState.waiting) {
@@ -711,8 +711,9 @@ RadioButtonOptions convertingStringToRadioButtonOptions(String savedRadioButtonO
     case "n/a":
       return RadioButtonOptions.na;
     case "no":
-    default:
       return RadioButtonOptions.no;
+    default:
+      return RadioButtonOptions.na;
   }
 }
 
